@@ -1,0 +1,38 @@
+PLAN FINAL (toi = moi / Lalaina)
+
+Objectif de déploiement:
+Tu modifies le code
+↓
+git push
+↓
+GitHub Actions
+↓
+Build image Docker
+↓
+Push Docker Hub
+↓
+VPS télécharge nouvelle image
+↓
+Site mis à jour
+
+Répartition des rôles (obligatoire):
+- Toi (moi/Lalaina): modifier le code + git push
+- GitHub Actions: build l'image Docker
+- Docker Hub: stocker l'image
+- VPS: exécuter la nouvelle image
+- Nginx: domaine + HTTPS
+
+Architecture professionnelle à respecter:
+- frontend, backend, infra = 3 repositories différents
+- infra contient docker-compose + nginx + deploy
+
+Règle stricte sur l'arborescence du root de CE dépôt:
+- backend/
+- frontend/
+- .git/
+- infra/
+
+Interdiction au root:
+- aucun autre fichier/dossier
+- pas de .github
+- pas de node_modules
