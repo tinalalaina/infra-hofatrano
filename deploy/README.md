@@ -22,3 +22,19 @@ Le script:
 
 ## Configuration Nginx
 - Vérifier que `infra/nginx/conf.d/default.conf` contient le bon `server_name` et les chemins TLS réels (ex: `/etc/letsencrypt/live/tina-lalaina.site/fullchain.pem`).
+
+## Variables recommandées
+
+Dans `/opt/gasy-car/backend.env`:
+
+```env
+DJANGO_ALLOWED_HOSTS=hofatrano.tina-lalaina.site,localhost,127.0.0.1
+CORS_ALLOWED_ORIGINS=https://hofatrano.tina-lalaina.site,http://localhost:5173,http://127.0.0.1:5173
+CSRF_TRUSTED_ORIGINS=https://hofatrano.tina-lalaina.site,http://localhost:5173,http://127.0.0.1:5173
+```
+
+Pour l'image frontend, builder avec:
+
+```bash
+--build-arg VITE_API_URL=https://hofatrano.tina-lalaina.site/api
+```
