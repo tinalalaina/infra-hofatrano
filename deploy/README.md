@@ -18,3 +18,7 @@ Le script:
 1. exporte `DOCKERHUB_USERNAME` et `IMAGE_TAG`
 2. fait `docker compose pull`
 3. redémarre en `up -d --remove-orphans`
+
+
+## Configuration Nginx
+- Vérifier que `infra/nginx/conf.d/default.conf` contient le bon `server_name` et les chemins TLS réels (ex: `/etc/letsencrypt/live/tina-lalaina.site/fullchain.pem`).
