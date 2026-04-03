@@ -7,6 +7,7 @@ Ce dossier contient le script appelé par GitHub Actions pour déployer la versi
 - Dossier `/opt/gasy-car/infra` contenant ce repo (ou copie des fichiers infra)
 - Fichier `/opt/gasy-car/backend.env` pour les variables Django
 - Certificats TLS disponibles dans `/etc/letsencrypt`
+- Sous-domaine configuré: `hofatrano.tina-lalaina.site` (A/AAAA vers le VPS)
 
 ## Script
 ```bash
