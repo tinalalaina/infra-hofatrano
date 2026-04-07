@@ -1,0 +1,55 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: hofatrano-db
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    image: lalainaraky/hofatrano-backend:latest
+    container_name: hofatrano-backend
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      STATIC_ROOT: /static
+      MEDIA_ROOT: /media
+      DB_HOST: db
+    depends_on:
+      db:
+        condition: service_healthy
+    command: gunicorn gasycar_backend.wsgi:application --bind 0.0.0.0:8000 --workers 3 --timeout 120
+
+  frontend:
+    image: lalainaraky/hofatrano-frontend:latest
+    container_name: hofatrano-frontend
+    restart: unless-stopped
+
+  nginx:
+    image: nginx:alpine
+    container_name: hofatrano-nginx
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+      - "8443:443"
+    volumes:
+      - ./nginx/conf.d/default.conf:/etc/nginx/conf.d/default.conf:ro
+      - /etc/letsencrypt:/etc/letsencrypt:ro
+      - ./static:/static:ro
+      - ./media:/media:ro
+    depends_on:
+      - backend
+      - frontend
+
+volumes:
+  postgres_data:

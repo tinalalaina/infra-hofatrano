@@ -1,20 +1,28 @@
-#!/usr/bin/env bash
-set -euo pipefail
+#!/bin/bash
+set -e
 
-if [[ $# -lt 2 ]]; then
-  echo "Usage: $0 <dockerhub_username> <image_tag>"
+DOCKERHUB_USERNAME=$1
+IMAGE_TAG=${2:-latest}
+
+if [ -z "$DOCKERHUB_USERNAME" ]; then
+  echo "❌ Usage: $0 <dockerhub_username> [image_tag]"
   exit 1
 fi
 
-DOCKERHUB_USERNAME="$1"
-IMAGE_TAG="$2"
-PROJECT_DIR="/opt/gasy-car/infra"
+echo "🚀 Déploiement Hofatrano - ${DOCKERHUB_USERNAME} (tag: ${IMAGE_TAG})"
 
-cd "$PROJECT_DIR"
+cd /opt/gasy-car/infra
 
-export DOCKERHUB_USERNAME
-export IMAGE_TAG
+export DOCKERHUB_USERNAME=$DOCKERHUB_USERNAME
+export IMAGE_TAG=$IMAGE_TAG
 
-docker compose -f docker-compose.prod.yml pull
+docker compose pull
+docker compose up -d --remove-orphans
 
-docker compose -f docker-compose.prod.yml up -d --remove-orphans
+echo "🔄 Exécution des migrations..."
+docker compose exec -T backend python manage.py migrate --noinput || echo "⚠️ Migrations skipped"
+
+echo "📦 Collecte des fichiers static..."
+docker compose exec -T backend python manage.py collectstatic --noinput --clear || echo "⚠️ Collectstatic skipped"
+
+echo "✅ Déploiement terminé avec succès !"

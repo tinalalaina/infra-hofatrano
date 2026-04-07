@@ -1,38 +1,37 @@
-PLAN FINAL (toi = moi / Lalaina)
+infra/
+├── docker-compose.yml
+├── backend.env   Important : Ne jamais mettre ce fichier sur GitHub !
+├── .env.example
+├── deploy/
+│   └── deploy.sh
+├── nginx/
+│   └── conf.d/
+│       └── default.conf
+├── static/
+├── media/
+├── README.md
+└── .gitignore
 
-Objectif de déploiement:
-Tu modifies le code
-↓
-git push
-↓
-GitHub Actions
-↓
-Build image Docker
-↓
-Push Docker Hub
-↓
-VPS télécharge nouvelle image
-↓
-Site mis à jour
 
-Répartition des rôles (obligatoire):
-- Toi (moi/Lalaina): modifier le code + git push
-- GitHub Actions: build l'image Docker
-- Docker Hub: stocker l'image
-- VPS: exécuter la nouvelle image
-- Nginx: domaine + HTTPS
+Voici l’état actuel de ton repository infra (le 3ème repo)
+/opt/gasy-car/infra/
+├── docker-compose.yml
+├── .env
+├── deploy/
+│   └── deploy.sh
+├── nginx/
+│   └── conf.d/
+│       └── default.conf
+├── static/
+├── media/
+├── .env.example          # (facultatif, tu peux le garder)
+├── README.md             # (facultatif)
+└── .gitignore
 
-Architecture professionnelle à respecter:
-- frontend, backend, infra = 3 repositories différents
-- infra contient docker-compose + nginx + deploy
 
-Règle stricte sur l'arborescence du root de CE dépôt:
-- backend/
-- frontend/
-- .git/
-- infra/
+cd /opt/gasy-car/infra
 
-Interdiction au root:
-- aucun autre fichier/dossier
-- pas de .github
-- pas de node_modules
+export DOCKERHUB_USERNAME=lalaina14
+export IMAGE_TAG=latest
+
+docker compose pull
